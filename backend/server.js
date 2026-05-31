@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const categoryRoutes = require("./routes/categoryRoutes");
+const questionRoutes = require("./routes/questionRoutes");
 
 // Load Environment Variables
 dotenv.config();
@@ -23,17 +25,19 @@ require("./config/db");
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
+app.use("/api/categories", categoryRoutes);
+app.use("/api/questions", questionRoutes);
 
 app.use("/api/auth", authRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
-  res.send("Placement Preparation Portal API Running");
+    res.send("Placement Preparation Portal API Running");
 });
 
 // Server Start
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server Running on Port ${PORT}`);
+    console.log(`Server Running on Port ${PORT}`);
 });
