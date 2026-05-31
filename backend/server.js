@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const categoryRoutes = require("./routes/categoryRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const testRoutes = require("./routes/testRoutes");
+const resultRoutes = require("./routes/resultRoutes");
 
 // Load Environment Variables
 dotenv.config();
@@ -26,10 +27,12 @@ require("./config/db");
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
+
 app.use("/api/categories", categoryRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/tests", testRoutes);
+app.use("/api/results", resultRoutes);
 
 // Test Route
 app.get("/", (req, res) => {
