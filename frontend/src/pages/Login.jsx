@@ -1,10 +1,13 @@
 import { useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
 
@@ -22,7 +25,7 @@ function Login() {
 
       alert("Login Successful");
 
-      console.log(res.data);
+      navigate("/dashboard");
 
     } catch (error) {
 
@@ -50,9 +53,7 @@ function Login() {
           className="form-control mb-3"
           placeholder="Enter Email"
           value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
@@ -60,9 +61,7 @@ function Login() {
           className="form-control mb-3"
           placeholder="Enter Password"
           value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
@@ -71,6 +70,19 @@ function Login() {
         >
           Login
         </button>
+        <div className="text-center mt-3">
+          <p>
+            Don't have an account?
+          </p>
+
+          <button
+            className="btn btn-success"
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </button>
+        </div>
+        
       </div>
     </div>
   );
