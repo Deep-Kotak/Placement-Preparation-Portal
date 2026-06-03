@@ -4,72 +4,116 @@ import API from "../services/api";
 
 function Categories() {
 
-  const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [categoryName, setCategoryName] = useState("");
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+    useEffect(() => {
+        fetchCategories();
+    }, []);
 
-  const fetchCategories = async () => {
+    const fetchCategories = async () => {
 
-    try {
+        try {
 
-      const res = await API.get("/categories");
+            const res = await API.get("/categories");
 
-      setCategories(res.data.data);
+            setCategories(res.data.data);
 
-    } catch (error) {
+        } catch (error) {
 
-      console.log(error);
+            console.log(error);
 
-    }
+        }
 
-  };
+    };
 
-  return (
-    <>
-      <Navbar />
+    const addCategory = async () => {
 
-      <div className="container mt-4">
+        try {
 
-        <h2 className="mb-4">
-          Categories
-        </h2>
+            await API.post("/categories", {
+                category_name: categoryName
+            });
 
-        <table className="table table-bordered table-striped">
+            alert("Category Added Successfully");
 
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Category Name</th>
-            </tr>
-          </thead>
+            setCategoryName("");
 
-          <tbody>
+            fetchCategories();
 
-            {categories.map((category) => (
+        } catch (error) {
 
-              <tr key={category.category_id}>
+            console.log(error);
 
-                <td>
-                  {category.category_id}
-                </td>
+        }
 
-                <td>
-                  {category.category_name}
-                </td>
+    };
 
-              </tr>
+    return (
+        <>
+            <Navbar />
 
-            ))}
+            <div className="container mt-4">
 
-          </tbody>
+                <h2 className="mb-4">
+                    Categories
+                </h2>
 
-        </table>
+                <div className="mb-4">
 
-      </div>
-    </>
-  );
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Enter Category Name"
+                        value={categoryName}
+                        onChange={(e) =>
+                            setCategoryName(e.target.value)
+                        }
+                    />
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={addCategory}
+                    >
+                        Add Category
+                    </button>
+
+                </div>
+
+                <table className="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category Name</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {categories.map((category) => (
+
+                            <tr key={category.category_id}>
+
+                                <td>
+                                    {category.category_id}
+                                </td>
+
+                                <td>
+                                    {category.category_name}
+                                </td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </>
+    );
 }
 
 export default Categories;
