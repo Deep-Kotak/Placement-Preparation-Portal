@@ -4,74 +4,183 @@ import API from "../services/api";
 
 function Questions() {
 
-  const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = useState([]);
 
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
+    const [categoryId, setCategoryId] = useState("");
+    const [questionText, setQuestionText] = useState("");
+    const [optionA, setOptionA] = useState("");
+    const [optionB, setOptionB] = useState("");
+    const [optionC, setOptionC] = useState("");
+    const [optionD, setOptionD] = useState("");
+    const [correctAnswer, setCorrectAnswer] = useState("");
 
-  const fetchQuestions = async () => {
+    useEffect(() => {
+        fetchQuestions();
+    }, []);
 
-    try {
+    const fetchQuestions = async () => {
 
-      const res = await API.get("/questions");
+        try {
 
-      setQuestions(res.data.data);
+            const res = await API.get("/questions");
 
-    } catch (error) {
+            setQuestions(res.data.data);
 
-      console.log(error);
+        } catch (error) {
 
-    }
+            console.log(error);
 
-  };
+        }
 
-  return (
-    <>
-      <Navbar />
+    };
 
-      <div className="container mt-4">
+    const addQuestion = async () => {
 
-        <h2 className="mb-4">
-          Questions
-        </h2>
+        try {
 
-        <table className="table table-bordered table-striped">
+            await API.post("/questions", {
+                category_id: categoryId,
+                question_text: questionText,
+                option_a: optionA,
+                option_b: optionB,
+                option_c: optionC,
+                option_d: optionD,
+                correct_answer: correctAnswer
+            });
 
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Category ID</th>
-              <th>Question</th>
-              <th>Correct Answer</th>
-            </tr>
-          </thead>
+            alert("Question Added Successfully");
 
-          <tbody>
+            setCategoryId("");
+            setQuestionText("");
+            setOptionA("");
+            setOptionB("");
+            setOptionC("");
+            setOptionD("");
+            setCorrectAnswer("");
 
-            {questions.map((question) => (
+            fetchQuestions();
 
-              <tr key={question.question_id}>
+        } catch (error) {
 
-                <td>{question.question_id}</td>
+            console.log(error);
 
-                <td>{question.category_id}</td>
+        }
 
-                <td>{question.question_text}</td>
+    };
 
-                <td>{question.correct_answer}</td>
+    return (
+        <>
+            <Navbar />
 
-              </tr>
+            <div className="container mt-4">
 
-            ))}
+                <h2 className="mb-4">
+                    Questions
+                </h2>
 
-          </tbody>
+                <div className="card p-3 mb-4">
 
-        </table>
+                    <input
+                        type="number"
+                        className="form-control mb-2"
+                        placeholder="Category ID"
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                    />
 
-      </div>
-    </>
-  );
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Question Text"
+                        value={questionText}
+                        onChange={(e) => setQuestionText(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Option A"
+                        value={optionA}
+                        onChange={(e) => setOptionA(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Option B"
+                        value={optionB}
+                        onChange={(e) => setOptionB(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Option C"
+                        value={optionC}
+                        onChange={(e) => setOptionC(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Option D"
+                        value={optionD}
+                        onChange={(e) => setOptionD(e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        className="form-control mb-3"
+                        placeholder="Correct Answer (A/B/C/D)"
+                        value={correctAnswer}
+                        onChange={(e) => setCorrectAnswer(e.target.value)}
+                    />
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={addQuestion}
+                    >
+                        Add Question
+                    </button>
+
+                </div>
+
+                <table className="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category ID</th>
+                            <th>Question</th>
+                            <th>Correct Answer</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {questions.map((question) => (
+
+                            <tr key={question.question_id}>
+
+                                <td>{question.question_id}</td>
+
+                                <td>{question.category_id}</td>
+
+                                <td>{question.question_text}</td>
+
+                                <td>{question.correct_answer}</td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </>
+    );
 }
 
 export default Questions;
