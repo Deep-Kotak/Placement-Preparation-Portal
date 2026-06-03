@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
 
@@ -15,12 +15,55 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+
       <div className="container">
 
-        <span className="navbar-brand">
+        <Link
+          className="navbar-brand"
+          to="/dashboard"
+        >
           Placement Portal
-        </span>
+        </Link>
+
+        <div className="navbar-nav">
+
+          <Link
+            className="nav-link"
+            to="/dashboard"
+          >
+            Dashboard
+          </Link>
+
+          <Link
+            className="nav-link"
+            to="/categories"
+          >
+            Categories
+          </Link>
+
+          <Link
+            className="nav-link"
+            to="/questions"
+          >
+            Questions
+          </Link>
+
+          <Link
+            className="nav-link"
+            to="/tests"
+          >
+            Tests
+          </Link>
+
+          <Link
+            className="nav-link"
+            to="/results"
+          >
+            Results
+          </Link>
+
+        </div>
 
         <button
           className="btn btn-danger"
@@ -30,6 +73,7 @@ function Navbar() {
         </button>
 
       </div>
+
     </nav>
   );
 }
