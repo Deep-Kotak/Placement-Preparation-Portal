@@ -4,74 +4,139 @@ import API from "../services/api";
 
 function Tests() {
 
-  const [tests, setTests] = useState([]);
+    const [tests, setTests] = useState([]);
 
-  useEffect(() => {
-    fetchTests();
-  }, []);
+    const [testName, setTestName] = useState("");
+    const [duration, setDuration] = useState("");
+    const [totalQuestions, setTotalQuestions] = useState("");
 
-  const fetchTests = async () => {
+    useEffect(() => {
+        fetchTests();
+    }, []);
 
-    try {
+    const fetchTests = async () => {
 
-      const res = await API.get("/tests");
+        try {
 
-      setTests(res.data.data);
+            const res = await API.get("/tests");
 
-    } catch (error) {
+            setTests(res.data.data);
 
-      console.log(error);
+        } catch (error) {
 
-    }
+            console.log(error);
 
-  };
+        }
 
-  return (
-    <>
-      <Navbar />
+    };
 
-      <div className="container mt-4">
+    const addTest = async () => {
 
-        <h2 className="mb-4">
-          Tests
-        </h2>
+        try {
 
-        <table className="table table-bordered table-striped">
+            await API.post("/tests", {
+                test_name: testName,
+                duration: duration,
+                total_questions: totalQuestions
+            });
 
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Test Name</th>
-              <th>Duration</th>
-              <th>Total Questions</th>
-            </tr>
-          </thead>
+            alert("Test Added Successfully");
 
-          <tbody>
+            setTestName("");
+            setDuration("");
+            setTotalQuestions("");
 
-            {tests.map((test) => (
+            fetchTests();
 
-              <tr key={test.test_id}>
+        } catch (error) {
 
-                <td>{test.test_id}</td>
+            console.log(error);
 
-                <td>{test.test_name}</td>
+        }
 
-                <td>{test.duration}</td>
+    };
 
-                <td>{test.total_questions}</td>
+    return (
+        <>
+            <Navbar />
 
-              </tr>
+            <div className="container mt-4">
 
-            ))}
+                <h2 className="mb-4">
+                    Tests
+                </h2>
 
-          </tbody>
+                <div className="card p-3 mb-4">
 
-        </table>
+                    <input
+                        type="text"
+                        className="form-control mb-2"
+                        placeholder="Test Name"
+                        value={testName}
+                        onChange={(e) => setTestName(e.target.value)}
+                    />
 
-      </div>
-    </>
-  );
+                    <input
+                        type="number"
+                        className="form-control mb-2"
+                        placeholder="Duration (Minutes)"
+                        value={duration}
+                        onChange={(e) => setDuration(e.target.value)}
+                    />
+
+                    <input
+                        type="number"
+                        className="form-control mb-3"
+                        placeholder="Total Questions"
+                        value={totalQuestions}
+                        onChange={(e) => setTotalQuestions(e.target.value)}
+                    />
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={addTest}
+                    >
+                        Add Test
+                    </button>
+
+                </div>
+
+                <table className="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Test Name</th>
+                            <th>Duration</th>
+                            <th>Total Questions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {tests.map((test) => (
+
+                            <tr key={test.test_id}>
+
+                                <td>{test.test_id}</td>
+
+                                <td>{test.test_name}</td>
+
+                                <td>{test.duration}</td>
+
+                                <td>{test.total_questions}</td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </>
+    );
 }
 
 export default Tests;

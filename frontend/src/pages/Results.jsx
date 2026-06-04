@@ -4,77 +4,153 @@ import API from "../services/api";
 
 function Results() {
 
-  const [results, setResults] = useState([]);
+    const [results, setResults] = useState([]);
 
-  useEffect(() => {
-    fetchResults();
-  }, []);
+    const [studentId, setStudentId] = useState("");
+    const [testId, setTestId] = useState("");
+    const [score, setScore] = useState("");
+    const [percentage, setPercentage] = useState("");
 
-  const fetchResults = async () => {
+    useEffect(() => {
+        fetchResults();
+    }, []);
 
-    try {
+    const fetchResults = async () => {
 
-      const res = await API.get("/results");
+        try {
 
-      setResults(res.data.data);
+            const res = await API.get("/results");
 
-    } catch (error) {
+            setResults(res.data.data);
 
-      console.log(error);
+        } catch (error) {
 
-    }
+            console.log(error);
 
-  };
+        }
 
-  return (
-    <>
-      <Navbar />
+    };
 
-      <div className="container mt-4">
+    const addResult = async () => {
 
-        <h2 className="mb-4">
-          Results
-        </h2>
+        try {
 
-        <table className="table table-bordered table-striped">
+            await API.post("/results", {
+                student_id: studentId,
+                test_id: testId,
+                score: score,
+                percentage: percentage
+            });
 
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Student ID</th>
-              <th>Test ID</th>
-              <th>Score</th>
-              <th>Percentage</th>
-            </tr>
-          </thead>
+            alert("Result Added Successfully");
 
-          <tbody>
+            setStudentId("");
+            setTestId("");
+            setScore("");
+            setPercentage("");
 
-            {results.map((result) => (
+            fetchResults();
 
-              <tr key={result.result_id}>
+        } catch (error) {
 
-                <td>{result.result_id}</td>
+            console.log(error);
 
-                <td>{result.student_id}</td>
+        }
 
-                <td>{result.test_id}</td>
+    };
 
-                <td>{result.score}</td>
+    return (
+        <>
+            <Navbar />
 
-                <td>{result.percentage}%</td>
+            <div className="container mt-4">
 
-              </tr>
+                <h2 className="mb-4">
+                    Results
+                </h2>
 
-            ))}
+                <div className="card p-3 mb-4">
 
-          </tbody>
+                    <input
+                        type="number"
+                        className="form-control mb-2"
+                        placeholder="Student ID"
+                        value={studentId}
+                        onChange={(e) => setStudentId(e.target.value)}
+                    />
 
-        </table>
+                    <input
+                        type="number"
+                        className="form-control mb-2"
+                        placeholder="Test ID"
+                        value={testId}
+                        onChange={(e) => setTestId(e.target.value)}
+                    />
 
-      </div>
-    </>
-  );
+                    <input
+                        type="number"
+                        className="form-control mb-2"
+                        placeholder="Score"
+                        value={score}
+                        onChange={(e) => setScore(e.target.value)}
+                    />
+
+                    <input
+                        type="number"
+                        className="form-control mb-3"
+                        placeholder="Percentage"
+                        value={percentage}
+                        onChange={(e) => setPercentage(e.target.value)}
+                    />
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={addResult}
+                    >
+                        Add Result
+                    </button>
+
+                </div>
+
+                <table className="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student ID</th>
+                            <th>Test ID</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {results.map((result) => (
+
+                            <tr key={result.result_id}>
+
+                                <td>{result.result_id}</td>
+
+                                <td>{result.student_id}</td>
+
+                                <td>{result.test_id}</td>
+
+                                <td>{result.score}</td>
+
+                                <td>{result.percentage}%</td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </>
+    );
 }
 
 export default Results;
