@@ -6,6 +6,7 @@ function Categories() {
 
     const [categories, setCategories] = useState([]);
     const [categoryName, setCategoryName] = useState("");
+    const [editId, setEditId] = useState(null);
 
     useEffect(() => {
         fetchCategories();
@@ -49,6 +50,54 @@ function Categories() {
 
     };
 
+    const updateCategory = async () => {
+
+        try {
+
+            await API.put(`/categories/${editId}`, {
+                category_name: categoryName
+            });
+
+            alert("Category Updated Successfully");
+
+            setEditId(null);
+            setCategoryName("");
+
+            fetchCategories();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const deleteCategory = async (id) => {
+
+        try {
+
+            await API.delete(`/categories/${id}`);
+
+            alert("Category Deleted Successfully");
+
+            fetchCategories();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const editCategory = (category) => {
+
+        setEditId(category.category_id);
+        setCategoryName(category.category_name);
+
+    };
+
     return (
         <>
             <Navbar />
@@ -59,11 +108,11 @@ function Categories() {
                     Categories
                 </h2>
 
-                <div className="mb-4">
+                <div className="card p-3 mb-4">
 
                     <input
                         type="text"
-                        className="form-control mb-2"
+                        className="form-control mb-3"
                         placeholder="Enter Category Name"
                         value={categoryName}
                         onChange={(e) =>
@@ -71,12 +120,23 @@ function Categories() {
                         }
                     />
 
-                    <button
-                        className="btn btn-primary"
-                        onClick={addCategory}
-                    >
-                        Add Category
-                    </button>
+                    {
+                        editId ? (
+                            <button
+                                className="btn btn-warning"
+                                onClick={updateCategory}
+                            >
+                                Update Category
+                            </button>
+                        ) : (
+                            <button
+                                className="btn btn-primary"
+                                onClick={addCategory}
+                            >
+                                Add Category
+                            </button>
+                        )
+                    }
 
                 </div>
 
@@ -86,6 +146,7 @@ function Categories() {
                         <tr>
                             <th>ID</th>
                             <th>Category Name</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -101,6 +162,28 @@ function Categories() {
 
                                 <td>
                                     {category.category_name}
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        className="btn btn-success btn-sm me-2"
+                                        onClick={() =>
+                                            editCategory(category)
+                                        }
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() =>
+                                            deleteCategory(category.category_id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+
                                 </td>
 
                             </tr>

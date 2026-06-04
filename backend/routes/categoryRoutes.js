@@ -4,7 +4,8 @@ const router = express.Router();
 const {
     addCategory,
     getCategories,
-    deleteCategory
+    deleteCategory,
+    updateCategory
 } = require("../controllers/categoryController");
 
 // Add Category
@@ -15,5 +16,8 @@ router.get("/", getCategories);
 
 // Delete Category
 router.delete("/:id", deleteCategory);
+
+// Update Category
+router.put("/:id", updateCategory);
 
 module.exports = router;

@@ -10,6 +10,8 @@ function Tests() {
     const [duration, setDuration] = useState("");
     const [totalQuestions, setTotalQuestions] = useState("");
 
+    const [editId, setEditId] = useState(null);
+
     useEffect(() => {
         fetchTests();
     }, []);
@@ -42,9 +44,7 @@ function Tests() {
 
             alert("Test Added Successfully");
 
-            setTestName("");
-            setDuration("");
-            setTotalQuestions("");
+            clearForm();
 
             fetchTests();
 
@@ -53,6 +53,68 @@ function Tests() {
             console.log(error);
 
         }
+
+    };
+
+    const updateTest = async () => {
+
+        try {
+
+            await API.put(`/tests/${editId}`, {
+                test_name: testName,
+                duration: duration,
+                total_questions: totalQuestions
+            });
+
+            alert("Test Updated Successfully");
+
+            setEditId(null);
+
+            clearForm();
+
+            fetchTests();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const deleteTest = async (id) => {
+
+        try {
+
+            await API.delete(`/tests/${id}`);
+
+            alert("Test Deleted Successfully");
+
+            fetchTests();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const editTest = (test) => {
+
+        setEditId(test.test_id);
+
+        setTestName(test.test_name);
+        setDuration(test.duration);
+        setTotalQuestions(test.total_questions);
+
+    };
+
+    const clearForm = () => {
+
+        setTestName("");
+        setDuration("");
+        setTotalQuestions("");
 
     };
 
@@ -92,12 +154,23 @@ function Tests() {
                         onChange={(e) => setTotalQuestions(e.target.value)}
                     />
 
-                    <button
-                        className="btn btn-primary"
-                        onClick={addTest}
-                    >
-                        Add Test
-                    </button>
+                    {
+                        editId ? (
+                            <button
+                                className="btn btn-warning"
+                                onClick={updateTest}
+                            >
+                                Update Test
+                            </button>
+                        ) : (
+                            <button
+                                className="btn btn-primary"
+                                onClick={addTest}
+                            >
+                                Add Test
+                            </button>
+                        )
+                    }
 
                 </div>
 
@@ -109,6 +182,7 @@ function Tests() {
                             <th>Test Name</th>
                             <th>Duration</th>
                             <th>Total Questions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -125,6 +199,26 @@ function Tests() {
                                 <td>{test.duration}</td>
 
                                 <td>{test.total_questions}</td>
+
+                                <td>
+
+                                    <button
+                                        className="btn btn-success btn-sm me-2"
+                                        onClick={() => editTest(test)}
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() =>
+                                            deleteTest(test.test_id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
 
                             </tr>
 

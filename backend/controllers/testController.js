@@ -100,8 +100,55 @@ const deleteTest = (req, res) => {
 
 };
 
+// Update Test
+const updateTest = (req, res) => {
+
+    const { id } = req.params;
+
+    const {
+        test_name,
+        duration,
+        total_questions
+    } = req.body;
+
+    const sql = `
+        UPDATE tests
+        SET
+            test_name = ?,
+            duration = ?,
+            total_questions = ?
+        WHERE test_id = ?
+    `;
+
+    db.query(
+        sql, [
+            test_name,
+            duration,
+            total_questions,
+            id
+        ],
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            res.json({
+                success: true,
+                message: "Test Updated Successfully"
+            });
+
+        }
+    );
+
+};
+
 module.exports = {
     createTest,
     getTests,
-    deleteTest
+    deleteTest,
+    updateTest
 };
