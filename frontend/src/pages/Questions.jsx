@@ -14,6 +14,8 @@ function Questions() {
     const [optionD, setOptionD] = useState("");
     const [correctAnswer, setCorrectAnswer] = useState("");
 
+    const [editId, setEditId] = useState(null);
+
     useEffect(() => {
         fetchQuestions();
     }, []);
@@ -50,13 +52,7 @@ function Questions() {
 
             alert("Question Added Successfully");
 
-            setCategoryId("");
-            setQuestionText("");
-            setOptionA("");
-            setOptionB("");
-            setOptionC("");
-            setOptionD("");
-            setCorrectAnswer("");
+            clearForm();
 
             fetchQuestions();
 
@@ -65,6 +61,82 @@ function Questions() {
             console.log(error);
 
         }
+
+    };
+
+    const updateQuestion = async () => {
+
+        try {
+
+            await API.put(`/questions/${editId}`, {
+                category_id: categoryId,
+                question_text: questionText,
+                option_a: optionA,
+                option_b: optionB,
+                option_c: optionC,
+                option_d: optionD,
+                correct_answer: correctAnswer
+            });
+
+            alert("Question Updated Successfully");
+
+            setEditId(null);
+
+            clearForm();
+
+            fetchQuestions();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const deleteQuestion = async (id) => {
+
+        try {
+
+            await API.delete(`/questions/${id}`);
+
+            alert("Question Deleted Successfully");
+
+            fetchQuestions();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const editQuestion = (question) => {
+
+        setEditId(question.question_id);
+
+        setCategoryId(question.category_id);
+        setQuestionText(question.question_text);
+
+        setOptionA(question.option_a);
+        setOptionB(question.option_b);
+        setOptionC(question.option_c);
+        setOptionD(question.option_d);
+
+        setCorrectAnswer(question.correct_answer);
+
+    };
+
+    const clearForm = () => {
+
+        setCategoryId("");
+        setQuestionText("");
+        setOptionA("");
+        setOptionB("");
+        setOptionC("");
+        setOptionD("");
+        setCorrectAnswer("");
 
     };
 
@@ -136,12 +208,23 @@ function Questions() {
                         onChange={(e) => setCorrectAnswer(e.target.value)}
                     />
 
-                    <button
-                        className="btn btn-primary"
-                        onClick={addQuestion}
-                    >
-                        Add Question
-                    </button>
+                    {
+                        editId ? (
+                            <button
+                                className="btn btn-warning"
+                                onClick={updateQuestion}
+                            >
+                                Update Question
+                            </button>
+                        ) : (
+                            <button
+                                className="btn btn-primary"
+                                onClick={addQuestion}
+                            >
+                                Add Question
+                            </button>
+                        )
+                    }
 
                 </div>
 
@@ -153,6 +236,7 @@ function Questions() {
                             <th>Category ID</th>
                             <th>Question</th>
                             <th>Correct Answer</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -169,6 +253,26 @@ function Questions() {
                                 <td>{question.question_text}</td>
 
                                 <td>{question.correct_answer}</td>
+
+                                <td>
+
+                                    <button
+                                        className="btn btn-success btn-sm me-2"
+                                        onClick={() => editQuestion(question)}
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() =>
+                                            deleteQuestion(question.question_id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
 
                             </tr>
 
