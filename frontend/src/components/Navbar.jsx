@@ -58,6 +58,13 @@ function Navbar() {
 
           <Link
             className="nav-link"
+            to="/start-test"
+          >
+            Start Test
+          </Link>
+
+          <Link
+            className="nav-link"
             to="/results"
           >
             Results

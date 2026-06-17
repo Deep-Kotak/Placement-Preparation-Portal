@@ -8,6 +8,8 @@ import Categories from "./pages/Categories";
 import Questions from "./pages/Questions";
 import Tests from "./pages/Tests";
 import Results from "./pages/Results";
+import StartTest from "./pages/StartTest";
+
 
 function App() {
   return (
@@ -47,6 +49,11 @@ function App() {
         <Route
           path="/results"
           element={<Results />}
+        />
+
+        <Route
+          path="/start-test"
+          element={<StartTest />}
         />
 
       </Routes>

@@ -60,28 +60,28 @@ function Dashboard() {
         <div className="row">
 
           <div className="col-md-3">
-            <div className="card shadow text-center p-3">
+            <div className="card text-white bg-primary shadow text-center p-3">
               <h5>Categories</h5>
               <h2>{categories}</h2>
             </div>
           </div>
 
           <div className="col-md-3">
-            <div className="card shadow text-center p-3">
+            <div className="card text-white bg-success shadow text-center p-3">
               <h5>Questions</h5>
               <h2>{questions}</h2>
             </div>
           </div>
 
           <div className="col-md-3">
-            <div className="card shadow text-center p-3">
+            <div className="card text-white bg-warning shadow text-center p-3">
               <h5>Tests</h5>
               <h2>{tests}</h2>
             </div>
           </div>
 
           <div className="col-md-3">
-            <div className="card shadow text-center p-3">
+          <div className="card text-white bg-danger shadow text-center p-3">
               <h5>Results</h5>
               <h2>{results}</h2>
             </div>
