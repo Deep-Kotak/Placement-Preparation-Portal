@@ -11,6 +11,8 @@ function Results() {
     const [score, setScore] = useState("");
     const [percentage, setPercentage] = useState("");
 
+    const [editId, setEditId] = useState(null);
+
     useEffect(() => {
         fetchResults();
     }, []);
@@ -44,10 +46,7 @@ function Results() {
 
             alert("Result Added Successfully");
 
-            setStudentId("");
-            setTestId("");
-            setScore("");
-            setPercentage("");
+            clearForm();
 
             fetchResults();
 
@@ -56,6 +55,71 @@ function Results() {
             console.log(error);
 
         }
+
+    };
+
+    const updateResult = async () => {
+
+        try {
+
+            await API.put(`/results/${editId}`, {
+                student_id: studentId,
+                test_id: testId,
+                score: score,
+                percentage: percentage
+            });
+
+            alert("Result Updated Successfully");
+
+            setEditId(null);
+
+            clearForm();
+
+            fetchResults();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const deleteResult = async (id) => {
+
+        try {
+
+            await API.delete(`/results/${id}`);
+
+            alert("Result Deleted Successfully");
+
+            fetchResults();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const editResult = (result) => {
+
+        setEditId(result.result_id);
+
+        setStudentId(result.student_id);
+        setTestId(result.test_id);
+        setScore(result.score);
+        setPercentage(result.percentage);
+
+    };
+
+    const clearForm = () => {
+
+        setStudentId("");
+        setTestId("");
+        setScore("");
+        setPercentage("");
 
     };
 
@@ -103,12 +167,23 @@ function Results() {
                         onChange={(e) => setPercentage(e.target.value)}
                     />
 
-                    <button
-                        className="btn btn-primary"
-                        onClick={addResult}
-                    >
-                        Add Result
-                    </button>
+                    {
+                        editId ? (
+                            <button
+                                className="btn btn-warning"
+                                onClick={updateResult}
+                            >
+                                Update Result
+                            </button>
+                        ) : (
+                            <button
+                                className="btn btn-primary"
+                                onClick={addResult}
+                            >
+                                Add Result
+                            </button>
+                        )
+                    }
 
                 </div>
 
@@ -121,6 +196,7 @@ function Results() {
                             <th>Test ID</th>
                             <th>Score</th>
                             <th>Percentage</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -131,14 +207,30 @@ function Results() {
                             <tr key={result.result_id}>
 
                                 <td>{result.result_id}</td>
-
                                 <td>{result.student_id}</td>
-
                                 <td>{result.test_id}</td>
-
                                 <td>{result.score}</td>
-
                                 <td>{result.percentage}%</td>
+
+                                <td>
+
+                                    <button
+                                        className="btn btn-success btn-sm me-2"
+                                        onClick={() => editResult(result)}
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() =>
+                                            deleteResult(result.result_id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
 
                             </tr>
 

@@ -50,9 +50,7 @@ const saveResult = (req, res) => {
 // Get All Results
 const getResults = (req, res) => {
 
-    const sql = `
-        SELECT * FROM results
-    `;
+    const sql = "SELECT * FROM results";
 
     db.query(sql, (err, results) => {
 
@@ -72,7 +70,86 @@ const getResults = (req, res) => {
 
 };
 
+// Update Result
+const updateResult = (req, res) => {
+
+    const { id } = req.params;
+
+    const {
+        student_id,
+        test_id,
+        score,
+        percentage
+    } = req.body;
+
+    const sql = `
+        UPDATE results
+        SET
+            student_id = ?,
+            test_id = ?,
+            score = ?,
+            percentage = ?
+        WHERE result_id = ?
+    `;
+
+    db.query(
+        sql, [
+            student_id,
+            test_id,
+            score,
+            percentage,
+            id
+        ],
+        (err, result) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            res.json({
+                success: true,
+                message: "Result Updated Successfully"
+            });
+
+        }
+    );
+
+};
+
+// Delete Result
+const deleteResult = (req, res) => {
+
+    const { id } = req.params;
+
+    const sql = `
+        DELETE FROM results
+        WHERE result_id = ?
+    `;
+
+    db.query(sql, [id], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Result Deleted Successfully"
+        });
+
+    });
+
+};
+
 module.exports = {
     saveResult,
-    getResults
+    getResults,
+    updateResult,
+    deleteResult
 };
