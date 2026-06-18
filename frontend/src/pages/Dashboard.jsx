@@ -12,6 +12,8 @@ function Dashboard() {
   const [tests, setTests] = useState(0);
   const [results, setResults] = useState(0);
 
+  const [recentResults, setRecentResults] = useState([]);
+
   useEffect(() => {
 
     const token = localStorage.getItem("token");
@@ -39,6 +41,10 @@ function Dashboard() {
       setTests(testRes.data.data.length);
       setResults(resultRes.data.data.length);
 
+      setRecentResults(
+        resultRes.data.data.slice(-5).reverse()
+      );
+
     } catch (error) {
 
       console.log(error);
@@ -54,7 +60,7 @@ function Dashboard() {
       <div className="container mt-5">
 
         <h2 className="mb-4">
-          Welcome To Placement Preparation Portal
+          Dashboard Analytics 📊
         </h2>
 
         <div className="row">
@@ -81,10 +87,52 @@ function Dashboard() {
           </div>
 
           <div className="col-md-3">
-          <div className="card text-white bg-danger shadow text-center p-3">
+            <div className="card text-white bg-danger shadow text-center p-3">
               <h5>Results</h5>
               <h2>{results}</h2>
             </div>
+          </div>
+
+        </div>
+
+        <div className="card shadow mt-5">
+
+          <div className="card-header">
+            <h4>Recent Results</h4>
+          </div>
+
+          <div className="card-body">
+
+            <table className="table table-bordered">
+
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Test ID</th>
+                  <th>Score</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {recentResults.map((result) => (
+
+                  <tr key={result.result_id}>
+
+                    <td>{result.student_id}</td>
+                    <td>{result.test_id}</td>
+                    <td>{result.score}</td>
+                    <td>{result.percentage}%</td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
           </div>
 
         </div>

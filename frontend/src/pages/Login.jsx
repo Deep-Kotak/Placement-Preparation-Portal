@@ -22,6 +22,11 @@ function Login() {
         "token",
         res.data.token
       );
+      
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data.user)
+      );
 
       alert("Login Successful");
 
@@ -82,7 +87,7 @@ function Login() {
             Register
           </button>
         </div>
-        
+
       </div>
     </div>
   );

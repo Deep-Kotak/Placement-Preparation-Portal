@@ -9,6 +9,8 @@ import Questions from "./pages/Questions";
 import Tests from "./pages/Tests";
 import Results from "./pages/Results";
 import StartTest from "./pages/StartTest";
+import Profile from "./pages/Profile";
+import Leaderboard from "./pages/Leaderboard";
 
 
 function App() {
@@ -54,6 +56,15 @@ function App() {
         <Route
           path="/start-test"
           element={<StartTest />}
+        />
+
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
+        <Route
+          path="/leaderboard"
+          element={<Leaderboard />}
         />
 
       </Routes>

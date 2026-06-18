@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // Register Student
-const registerStudent = async (req, res) => {
+const registerStudent = async(req, res) => {
     const { full_name, email, password, college, course } = req.body;
 
     try {
@@ -16,8 +16,7 @@ const registerStudent = async (req, res) => {
     `;
 
         db.query(
-            sql,
-            [full_name, email, hashedPassword, college, course],
+            sql, [full_name, email, hashedPassword, college, course],
             (err, result) => {
                 if (err) {
                     return res.status(500).json({
@@ -46,7 +45,7 @@ const loginStudent = (req, res) => {
 
     const sql = "SELECT * FROM students WHERE email = ?";
 
-    db.query(sql, [email], async (err, results) => {
+    db.query(sql, [email], async(err, results) => {
         if (err) {
             return res.status(500).json({
                 success: false,
@@ -75,13 +74,11 @@ const loginStudent = (req, res) => {
             });
         }
 
-        const token = jwt.sign(
-            {
+        const token = jwt.sign({
                 student_id: user.student_id,
                 email: user.email,
             },
-            process.env.JWT_SECRET,
-            {
+            process.env.JWT_SECRET, {
                 expiresIn: "1d",
             }
         );
@@ -94,6 +91,8 @@ const loginStudent = (req, res) => {
                 id: user.student_id,
                 name: user.full_name,
                 email: user.email,
+                college: user.college,
+                course: user.course
             },
         });
     });
@@ -114,4 +113,3 @@ module.exports = {
     loginStudent,
     dashboard
 };
-

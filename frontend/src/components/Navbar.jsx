@@ -70,8 +70,20 @@ function Navbar() {
             Results
           </Link>
 
-        </div>
+          <Link
+            className="nav-link"
+            to="/profile"
+          >
+            Profile
+          </Link>
 
+        </div>
+        <Link
+          className="nav-link"
+          to="/leaderboard"
+        >
+          Leaderboard
+        </Link>
         <button
           className="btn btn-danger"
           onClick={handleLogout}

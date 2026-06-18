@@ -13,6 +13,7 @@ function Questions() {
     const [optionC, setOptionC] = useState("");
     const [optionD, setOptionD] = useState("");
     const [correctAnswer, setCorrectAnswer] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const [editId, setEditId] = useState(null);
 
@@ -153,6 +154,16 @@ function Questions() {
                 <div className="card p-3 mb-4">
 
                     <input
+    type="text"
+    className="form-control mb-3"
+    placeholder="Search Question..."
+    value={searchTerm}
+    onChange={(e) =>
+        setSearchTerm(e.target.value)
+    }
+/>
+
+                    <input
                         type="number"
                         className="form-control mb-2"
                         placeholder="Category ID"
@@ -242,7 +253,15 @@ function Questions() {
 
                     <tbody>
 
-                        {questions.map((question) => (
+                        {questions
+    .filter((question) =>
+        question.question_text
+            .toLowerCase()
+            .includes(
+                searchTerm.toLowerCase()
+            )
+    )
+    .map((question) => (
 
                             <tr key={question.question_id}>
 
