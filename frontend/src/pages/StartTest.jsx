@@ -10,12 +10,29 @@ function StartTest() {
 
     const [score, setScore] = useState(0);
     const [testCompleted, setTestCompleted] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(60);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchQuestions();
-    }, []);
+
+        if (timeLeft <= 0) {
+
+            autoSubmitTest();
+
+            return;
+
+        }
+
+        const timer = setInterval(() => {
+
+            setTimeLeft((prev) => prev - 1);
+
+        }, 1000);
+
+        return () => clearInterval(timer);
+
+    }, [timeLeft]);
 
     const fetchQuestions = async () => {
 
@@ -89,7 +106,13 @@ function StartTest() {
         }
 
     };
+    const autoSubmitTest = async () => {
 
+    await saveResult(score);
+
+    setTestCompleted(true);
+
+};
     if (testCompleted) {
 
         return (
@@ -120,6 +143,13 @@ function StartTest() {
             <h2 className="mb-4">
                 Start Test
             </h2>
+
+            <div className="alert alert-warning">
+
+                ⏱️ Time Left:
+                {Math.floor(timeLeft / 60)}:
+                {String(timeLeft % 60).padStart(2, "0")}
+            </div>
 
             {
                 questions.length > 0 && (
@@ -204,7 +234,7 @@ function StartTest() {
                         >
                             {
                                 currentQuestion ===
-                                questions.length - 1
+                                    questions.length - 1
                                     ? "Submit Test"
                                     : "Next"
                             }
