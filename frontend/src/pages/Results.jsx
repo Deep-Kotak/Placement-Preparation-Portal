@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import API from "../services/api";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function Results() {
 
@@ -114,6 +116,41 @@ function Results() {
 
     };
 
+    const exportToExcel = () => {
+
+    const worksheet =
+        XLSX.utils.json_to_sheet(results);
+
+    const workbook =
+        XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Results"
+    );
+
+    const excelBuffer =
+        XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array"
+        });
+
+    const fileData = new Blob(
+        [excelBuffer],
+        {
+            type:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+    );
+
+    saveAs(
+        fileData,
+        "results.xlsx"
+    );
+
+};
+
     const clearForm = () => {
 
         setStudentId("");
@@ -132,6 +169,12 @@ function Results() {
                 <h2 className="mb-4">
                     Results
                 </h2>
+                <button
+    className="btn btn-success mb-3"
+    onClick={exportToExcel}
+>
+    📊 Export Results
+</button>
 
                 <div className="card p-3 mb-4">
 
